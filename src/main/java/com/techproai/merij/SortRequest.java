@@ -1,37 +1,34 @@
-package com.techproai.merij.builders;
+package com.techproai.merij;
 
 import com.techproai.merij.exceptions.SortOperationNotSupported;
-import lombok.Getter;
 import org.springframework.data.domain.Sort;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class SortQueryBuilder {
-    @Getter
+public class SortRequest {
     private String key;
-    @Getter
     private String operator;
 
-    public SortQueryBuilder() {
+    public SortRequest() {
     }
 
-    public static SortQueryBuilder resolve(String input) {
+    public static SortRequest resolve(String input) {
         try {
             Pattern pattern = Pattern.compile("(\\w+\\s*)(==)(.*)", Pattern.CASE_INSENSITIVE);
             Matcher matcher = pattern.matcher(input);
             if (!matcher.find()) {
-                return new SortQueryBuilder();
+                return new SortRequest();
             }
-            return new SortQueryBuilder()
+            return new SortRequest()
                     .key(matcher.group(1).trim())
                     .op(matcher.group(3).trim());
         } catch (IndexOutOfBoundsException ignored) {
         }
-        return new SortQueryBuilder();
+        return new SortRequest();
     }
 
-    public SortQueryBuilder key(String key) {
+    public SortRequest key(String key) {
         this.key = key;
         return this;
     }
@@ -40,7 +37,7 @@ public class SortQueryBuilder {
         return this.key != null && this.operator != null;
     }
 
-    public SortQueryBuilder op(String operator) {
+    public SortRequest op(String operator) {
         this.operator = operator;
         return this;
     }
