@@ -1,8 +1,8 @@
-package com.techproai.merij;
+package com.tuana9a.merij;
 
-import com.techproai.merij.exceptions.CriteriaOperationNotSupported;
-import com.techproai.merij.exceptions.CriteriaQueryLogicException;
-import com.techproai.merij.utils.StringUtils;
+import com.tuana9a.merij.exceptions.CriteriaOperationNotSupported;
+import com.tuana9a.merij.exceptions.CriteriaQueryLogicException;
+import com.tuana9a.merij.utils.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
 
 import java.util.*;

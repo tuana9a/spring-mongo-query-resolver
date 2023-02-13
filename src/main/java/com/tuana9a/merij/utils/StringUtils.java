@@ -1,4 +1,4 @@
-package com.techproai.merij.utils;
+package com.tuana9a.merij.utils;
 
 import org.bson.types.ObjectId;
 

@@ -1,9 +1,9 @@
-package com.techproai.merij;
+package com.tuana9a.merij;
 
-import com.techproai.merij.exceptions.CriteriaOperationNotSupported;
-import com.techproai.merij.exceptions.CriteriaQueryLogicException;
-import com.techproai.merij.exceptions.MerijException;
-import com.techproai.merij.exceptions.SortOperationNotSupported;
+import com.tuana9a.merij.exceptions.CriteriaOperationNotSupported;
+import com.tuana9a.merij.exceptions.CriteriaQueryLogicException;
+import com.tuana9a.merij.exceptions.MerijException;
+import com.tuana9a.merij.exceptions.SortOperationNotSupported;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;

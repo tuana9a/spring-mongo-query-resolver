@@ -1,6 +1,6 @@
-package com.techproai.merij;
+package com.tuana9a.merij;
 
-import com.techproai.merij.exceptions.SortOperationNotSupported;
+import com.tuana9a.merij.exceptions.SortOperationNotSupported;
 import org.springframework.data.domain.Sort;
 
 import java.util.regex.Matcher;
