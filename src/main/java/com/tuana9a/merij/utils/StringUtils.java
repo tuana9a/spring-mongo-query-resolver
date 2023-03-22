@@ -15,7 +15,7 @@ public class StringUtils {
             if (input.matches("^\\d{1,10}$")) return Integer.parseInt(input);
             if (input.matches("^\\d{10,20}$")) return Long.parseLong(input);
         } catch (Exception ignored) {
-            // do nothing :))
+            // do nothing
         }
         return input;
     }

@@ -1,6 +1,7 @@
-package com.tuana9a.merij;
+package com.tuana9a.merij.requests;
 
 import com.tuana9a.merij.exceptions.SortOperationNotSupported;
+import com.tuana9a.merij.exceptions.SortPatternNotMatchException;
 import org.springframework.data.domain.Sort;
 
 import java.util.regex.Matcher;
@@ -13,19 +14,15 @@ public class SortRequest {
     public SortRequest() {
     }
 
-    public static SortRequest resolve(String input) {
-        try {
-            Pattern pattern = Pattern.compile("(\\w+\\s*)(==)(.*)", Pattern.CASE_INSENSITIVE);
-            Matcher matcher = pattern.matcher(input);
-            if (!matcher.find()) {
-                return new SortRequest();
-            }
-            return new SortRequest()
-                    .key(matcher.group(1).trim())
-                    .op(matcher.group(3).trim());
-        } catch (IndexOutOfBoundsException ignored) {
+    public static SortRequest resolve(String input) throws SortPatternNotMatchException {
+        Pattern pattern = Pattern.compile("(\\w+\\s*)(=)(.*)", Pattern.CASE_INSENSITIVE);
+        Matcher matcher = pattern.matcher(input);
+        if (!matcher.find()) {
+            throw new SortPatternNotMatchException(input);
         }
-        return new SortRequest();
+        return new SortRequest()
+                .key(matcher.group(1).trim())
+                .op(matcher.group(3).trim());
     }
 
     public SortRequest key(String key) {
@@ -42,7 +39,7 @@ public class SortRequest {
         return this;
     }
 
-    public Sort first() throws SortOperationNotSupported {
+    public Sort toSort() throws SortOperationNotSupported {
         Sort sort;
         switch (this.operator) {
             case "1":
@@ -57,20 +54,18 @@ public class SortRequest {
         return sort;
     }
 
-    public Sort chain(Sort first) throws SortOperationNotSupported {
-        Sort chain;
+    public Sort and(Sort first) throws SortOperationNotSupported {
+        Sort sort;
         switch (this.operator) {
-            case "asc":
             case "1":
-                chain = first.and(Sort.by(Sort.Direction.ASC, this.key));
+                sort = first.and(Sort.by(Sort.Direction.ASC, this.key));
                 break;
-            case "desc":
             case "-1":
-                chain = first.and(Sort.by(Sort.Direction.DESC, this.key));
+                sort = first.and(Sort.by(Sort.Direction.DESC, this.key));
                 break;
             default:
                 throw new SortOperationNotSupported(this.operator);
         }
-        return chain;
+        return sort;
     }
 }
