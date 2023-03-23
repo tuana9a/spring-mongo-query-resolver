@@ -17,9 +17,10 @@ public class CriteriaRequest {
     private String operator;
     private CriteriaRequest next;
     private String regexOptions;
+    public static String DEFAULT_REGEX_OPTIONS = "";
 
     private CriteriaRequest() {
-        this.regexOptions = "";
+        this.regexOptions = DEFAULT_REGEX_OPTIONS;
     }
 
     public static CriteriaRequest resolve(String input) throws QueryPatternNotMatchException {

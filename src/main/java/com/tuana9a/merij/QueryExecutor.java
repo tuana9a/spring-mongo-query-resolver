@@ -10,9 +10,7 @@ import org.springframework.data.mongodb.core.MongoTemplate;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryExecutor<T> {
@@ -22,15 +20,6 @@ public class QueryExecutor<T> {
     private int size;
     private List<SortRequest> sortRequests;
     private List<CriteriaRequest> criteriaRequests;
-
-    /**
-     * @deprecated use builder syntax instead
-     */
-    public QueryExecutor(Class<T> klass, MongoTemplate mongoTemplate) {
-        this();
-        this.klass = klass;
-        this.mongoTemplate = mongoTemplate;
-    }
 
     public QueryExecutor() {
         this.criteriaRequests = new LinkedList<>();
@@ -54,7 +43,7 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> queries(List<String> queries) throws QueryPatternNotMatchException {
+    public QueryExecutor<T> queries(Collection<String> queries) throws QueryPatternNotMatchException {
         this.criteriaRequests = new LinkedList<>();
         for (String query : queries) {
             this.criteriaRequests.add(CriteriaRequest.resolve(query));
@@ -62,10 +51,19 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> dropKey(String key) {
+    public QueryExecutor<T> queries(String[] queries) throws QueryPatternNotMatchException {
+        this.criteriaRequests = new LinkedList<>();
+        for (String query : queries) {
+            this.criteriaRequests.add(CriteriaRequest.resolve(query));
+        }
+        return this;
+    }
+
+    public QueryExecutor<T> dropKey(String... keys) {
+        Set<String> keySet = new HashSet<>(Arrays.asList(keys));
         this.criteriaRequests = this.criteriaRequests
                 .stream()
-                .filter(x -> !Objects.equals(x.key(), key))
+                .filter(x -> !keySet.contains(x.key()))
                 .collect(Collectors.toList());
         return this;
     }
@@ -75,7 +73,15 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> sorts(List<String> sorts) throws SortPatternNotMatchException {
+    public QueryExecutor<T> sorts(Collection<String> sorts) throws SortPatternNotMatchException {
+        this.sortRequests = new LinkedList<>();
+        for (String sort : sorts) {
+            this.sortRequests.add(SortRequest.resolve(sort));
+        }
+        return this;
+    }
+
+    public QueryExecutor<T> sorts(String[] sorts) throws SortPatternNotMatchException {
         this.sortRequests = new LinkedList<>();
         for (String sort : sorts) {
             this.sortRequests.add(SortRequest.resolve(sort));
@@ -114,15 +120,6 @@ public class QueryExecutor<T> {
 
     public Sort sort() throws SortOperationNotSupported {
         Sort sort = Sort.unsorted();
-//        if (sortRequests.size() > 0) {
-//            SortRequest first = sortRequests.get(0);
-//            sort = first.toSort();
-//            int length = sortRequests.size();
-//            for (int i = 1; i < length; i++) {
-//                SortRequest sortRequest = sortRequests.get(i);
-//                sortRequest.and(sort);
-//            }
-//        }
         for (SortRequest sortRequest : sortRequests) {
             sort = sortRequest.and(sort);
         }

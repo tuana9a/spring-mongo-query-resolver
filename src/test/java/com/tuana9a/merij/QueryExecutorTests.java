@@ -82,4 +82,17 @@ public class QueryExecutorTests {
         Assertions.assertEquals(document, desiredDocument);
         Assertions.assertEquals(sort, Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "name")));
     }
+
+    @Test
+    public void test4() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported, SortPatternNotMatchException, SortOperationNotSupported {
+        CriteriaRequest.DEFAULT_REGEX_OPTIONS = "i";
+        List<String> queries = new LinkedList<>();
+        queries.add("name*=tuana9a");
+        QueryExecutor<?> queryExecutor = new QueryExecutor<>().queries(queries);
+        Criteria criteria = queryExecutor.criteria();
+        Criteria desiredCriteria = Criteria.where("name").regex("tuana9a", "i");
+        String document = criteria.getCriteriaObject().toJson();
+        String desiredDocument = desiredCriteria.getCriteriaObject().toJson();
+        Assertions.assertEquals(document, desiredDocument);
+    }
 }
