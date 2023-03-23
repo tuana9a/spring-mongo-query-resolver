@@ -18,12 +18,8 @@ public class QueryExecutorTests {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
-        List<CriteriaRequest> criteriaRequests = new LinkedList<>();
-        for (String queryString : queries) {
-            criteriaRequests.add(CriteriaRequest.resolve(queryString));
-        }
         Criteria criteria = new QueryExecutor<>()
-                .queries(criteriaRequests)
+                .queries(queries)
                 .and(CriteriaRequest.from("age", "!=", 8))
                 .criteria();
         Assertions.assertEquals(criteria, Criteria.where("age").gt(5).lt(10).ne(8));
@@ -35,16 +31,30 @@ public class QueryExecutorTests {
         queries.add("age>5");
         queries.add("age<10");
         queries.add("name==tuana9a");
-        List<CriteriaRequest> criteriaRequests = new LinkedList<>();
-        for (String queryString : queries) {
-            criteriaRequests.add(CriteriaRequest.resolve(queryString));
-        }
         Criteria criteria = new QueryExecutor<>()
-                .queries(criteriaRequests)
+                .queries(queries)
                 .and(CriteriaRequest.from("age", "!=", 8))
                 .criteria();
         Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8)
                 .and("name").is("tuana9a");
+        Document document = criteria.getCriteriaObject();
+        Document desiredDocument = desiredCriteria.getCriteriaObject();
+        Assertions.assertEquals(document, desiredDocument);
+    }
+
+    @Test
+    public void test2() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported {
+        List<String> queries = new LinkedList<>();
+        queries.add("age>5");
+        queries.add("age<10");
+        queries.add("name==tuana9a");
+        queries.add("name*=tuana9a");
+        Criteria criteria = new QueryExecutor<>()
+                .queries(queries)
+                .dropKey("name")
+                .and(CriteriaRequest.from("age", "!=", 8))
+                .criteria();
+        Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8);
         Document document = criteria.getCriteriaObject();
         Document desiredDocument = desiredCriteria.getCriteriaObject();
         Assertions.assertEquals(document, desiredDocument);

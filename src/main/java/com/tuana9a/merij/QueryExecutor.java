@@ -12,6 +12,8 @@ import org.springframework.data.mongodb.core.query.Query;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
+import java.util.stream.Collectors;
 
 public class QueryExecutor<T> {
     private Class<T> klass;
@@ -47,8 +49,24 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> queries(List<CriteriaRequest> queries) {
-        this.criteriaRequests = queries;
+    public QueryExecutor<T> criteriaRequests(List<CriteriaRequest> criteriaRequests) {
+        this.criteriaRequests = criteriaRequests;
+        return this;
+    }
+
+    public QueryExecutor<T> queries(List<String> queries) throws QueryPatternNotMatchException {
+        this.criteriaRequests = new LinkedList<>();
+        for (String query : queries) {
+            this.criteriaRequests.add(CriteriaRequest.resolve(query));
+        }
+        return this;
+    }
+
+    public QueryExecutor<T> dropKey(String key) {
+        this.criteriaRequests = this.criteriaRequests
+                .stream()
+                .filter(x -> !Objects.equals(x.key(), key))
+                .collect(Collectors.toList());
         return this;
     }
 
