@@ -13,7 +13,7 @@
 
     <groupId>com.tuana9a</groupId>
     <artifactId>merij</artifactId>
-    <version>1.1.1</version>
+    <version>1.1.2</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>

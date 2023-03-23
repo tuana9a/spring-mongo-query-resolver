@@ -70,8 +70,16 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> sorts(List<SortRequest> sorts) {
-        this.sortRequests = sorts;
+    public QueryExecutor<T> sortsRequests(List<SortRequest> sortRequests) {
+        this.sortRequests = sortRequests;
+        return this;
+    }
+
+    public QueryExecutor<T> sorts(List<String> sorts) throws SortPatternNotMatchException {
+        this.sortRequests = new LinkedList<>();
+        for (String sort : sorts) {
+            this.sortRequests.add(SortRequest.resolve(sort));
+        }
         return this;
     }
 
@@ -98,16 +106,6 @@ public class QueryExecutor<T> {
     public Criteria criteria() throws CriteriaQueryLogicException, CriteriaOperationNotSupported {
         Criteria criteria = new Criteria();
         List<CriteriaRequest> reducedCriteriaRequests = CriteriaRequest.reduce(criteriaRequests);
-        // must reduce before build
-//        if (reducedCriteriaRequests.size() > 0) {
-//            CriteriaRequest first = reducedCriteriaRequests.get(0);
-//            criteria = first.init();
-//            int length = reducedCriteriaRequests.size();
-//            for (int i = 1; i < length; i++) {
-//                CriteriaRequest criteriaRequest = reducedCriteriaRequests.get(i);
-//                criteriaRequest.chain(criteria);
-//            }
-//        }
         for (CriteriaRequest criteriaRequest : reducedCriteriaRequests) {
             criteria = criteriaRequest.and(criteria);
         }
@@ -116,14 +114,17 @@ public class QueryExecutor<T> {
 
     public Sort sort() throws SortOperationNotSupported {
         Sort sort = Sort.unsorted();
-        if (sortRequests.size() > 0) {
-            SortRequest first = sortRequests.get(0);
-            sort = first.toSort();
-            int length = sortRequests.size();
-            for (int i = 1; i < length; i++) {
-                SortRequest sortRequest = sortRequests.get(i);
-                sortRequest.and(sort);
-            }
+//        if (sortRequests.size() > 0) {
+//            SortRequest first = sortRequests.get(0);
+//            sort = first.toSort();
+//            int length = sortRequests.size();
+//            for (int i = 1; i < length; i++) {
+//                SortRequest sortRequest = sortRequests.get(i);
+//                sortRequest.and(sort);
+//            }
+//        }
+        for (SortRequest sortRequest : sortRequests) {
+            sort = sortRequest.and(sort);
         }
         return sort;
     }
