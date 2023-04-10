@@ -13,7 +13,7 @@ import java.util.List;
 
 public class QueryExecutorTests {
     @Test
-    public void test() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported {
+    public void test() throws QueryPatternNotMatchException, CriteriaOperationNotSupported {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
@@ -25,7 +25,7 @@ public class QueryExecutorTests {
     }
 
     @Test
-    public void test1() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported {
+    public void test1() throws QueryPatternNotMatchException, CriteriaOperationNotSupported {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
@@ -42,7 +42,7 @@ public class QueryExecutorTests {
     }
 
     @Test
-    public void test2() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported {
+    public void test2() throws QueryPatternNotMatchException, CriteriaOperationNotSupported {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
@@ -60,7 +60,7 @@ public class QueryExecutorTests {
     }
 
     @Test
-    public void test3() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported, SortPatternNotMatchException, SortOperationNotSupported {
+    public void test3() throws QueryPatternNotMatchException, CriteriaOperationNotSupported, SortPatternNotMatchException, SortOperationNotSupported {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
@@ -84,7 +84,7 @@ public class QueryExecutorTests {
     }
 
     @Test
-    public void test4() throws QueryPatternNotMatchException, CriteriaQueryLogicException, CriteriaOperationNotSupported, SortPatternNotMatchException, SortOperationNotSupported {
+    public void test4() throws QueryPatternNotMatchException, CriteriaOperationNotSupported {
         CriteriaRequest.DEFAULT_REGEX_OPTIONS = "i";
         List<String> queries = new LinkedList<>();
         queries.add("name*=tuana9a");

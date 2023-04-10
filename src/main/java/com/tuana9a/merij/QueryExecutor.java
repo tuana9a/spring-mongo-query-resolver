@@ -109,11 +109,11 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public Criteria criteria() throws CriteriaQueryLogicException, CriteriaOperationNotSupported {
+    public Criteria criteria() throws CriteriaOperationNotSupported {
         Criteria criteria = new Criteria();
         List<CriteriaRequest> reducedCriteriaRequests = CriteriaRequest.reduce(criteriaRequests);
         for (CriteriaRequest criteriaRequest : reducedCriteriaRequests) {
-            criteria = criteriaRequest.and(criteria);
+            criteria = criteriaRequest.chain(criteria);
         }
         return criteria;
     }
@@ -129,7 +129,7 @@ public class QueryExecutor<T> {
     public List<T> find() throws MerijException {
         Criteria criteria = this.criteria();
         Sort sort = this.sort();
-        Pageable pageable = (page <= 0 && size <= 0) ? Pageable.unpaged() : PageRequest.of(page, size);
+        Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
         Query query = new Query(criteria);
         return mongoTemplate.find(query.with(pageable).with(sort), klass);
     }

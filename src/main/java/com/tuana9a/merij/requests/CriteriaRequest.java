@@ -1,7 +1,6 @@
 package com.tuana9a.merij.requests;
 
 import com.tuana9a.merij.exceptions.CriteriaOperationNotSupported;
-import com.tuana9a.merij.exceptions.CriteriaQueryLogicException;
 import com.tuana9a.merij.exceptions.QueryPatternNotMatchException;
 import com.tuana9a.merij.utils.StringUtils;
 import org.springframework.data.mongodb.core.query.Criteria;
@@ -11,6 +10,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
+// TODO: check logic when parse
 public class CriteriaRequest {
     private String key;
     private Object value;
@@ -91,7 +91,7 @@ public class CriteriaRequest {
         return this;
     }
 
-    public Criteria toCriteria() throws CriteriaOperationNotSupported, CriteriaQueryLogicException {
+    public Criteria toCriteria() throws CriteriaOperationNotSupported {
         Criteria criteria;
         switch (this.operator) {
             case "==":
@@ -127,12 +127,12 @@ public class CriteriaRequest {
         return criteria;
     }
 
-    public Criteria toCriteria(Criteria first) throws CriteriaOperationNotSupported, CriteriaQueryLogicException {
+    public Criteria toCriteria(Criteria first) throws CriteriaOperationNotSupported {
         Criteria criteria;
         switch (this.operator) {
             case "==":
-                // will throw db logic error
-                throw new CriteriaQueryLogicException("next.operator is '==' recheck your query logic");
+                criteria = first.is(this.value);
+                break;
             case ">":
                 criteria = first.gt(this.value);
                 break;
@@ -152,7 +152,8 @@ public class CriteriaRequest {
                 criteria = first.regex(String.valueOf(this.value), regexOptions);
                 break;
             case "@=":
-                throw new CriteriaQueryLogicException("next.operator is '@=' recheck your query logic");
+                criteria = first.in((List) this.value);
+                break;
             default:
                 throw new CriteriaOperationNotSupported(this.operator);
         }
@@ -162,7 +163,7 @@ public class CriteriaRequest {
         return criteria;
     }
 
-    public Criteria and(Criteria first) throws CriteriaOperationNotSupported, CriteriaQueryLogicException {
+    public Criteria chain(Criteria first) throws CriteriaOperationNotSupported {
         Criteria criteria;
         switch (this.operator) {
             case "==":
