@@ -1,5 +1,6 @@
 package com.tuana9a.merij;
 
+import com.mongodb.client.result.DeleteResult;
 import com.tuana9a.merij.exceptions.*;
 import com.tuana9a.merij.requests.CriteriaRequest;
 import com.tuana9a.merij.requests.SortRequest;
@@ -16,16 +17,16 @@ import java.util.stream.Collectors;
 public class QueryExecutor<T> {
     private Class<T> klass;
     private MongoTemplate mongoTemplate;
-    private int page;
-    private int size;
-    private List<SortRequest> sortRequests;
-    private List<CriteriaRequest> criteriaRequests;
+    private int page = 0;
+    private int size = 0;
+    private Collection<String> sorts = new LinkedList<>();
+    private Collection<SortRequest> sortRequests = new LinkedList<>();
+    private Collection<CriteriaRequest> criteriaRequests = new LinkedList<>();
+    private final Collection<CriteriaRequest> andCriteriaRequests = new LinkedList<>();
+    private Collection<String> queries = new LinkedList<>();
+    private Set<String> dropKeys = new HashSet<>();
 
     public QueryExecutor() {
-        this.criteriaRequests = new LinkedList<>();
-        this.sortRequests = new LinkedList<>();
-        this.page = 0;
-        this.size = 0;
     }
 
     public QueryExecutor<T> klass(Class<T> klass) {
@@ -43,28 +44,18 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> queries(Collection<String> queries) throws QueryPatternNotMatchException {
-        this.criteriaRequests = new LinkedList<>();
-        for (String query : queries) {
-            this.criteriaRequests.add(CriteriaRequest.resolve(query));
-        }
+    public QueryExecutor<T> queries(Collection<String> queries) {
+        this.queries = queries;
         return this;
     }
 
-    public QueryExecutor<T> queries(String[] queries) throws QueryPatternNotMatchException {
-        this.criteriaRequests = new LinkedList<>();
-        for (String query : queries) {
-            this.criteriaRequests.add(CriteriaRequest.resolve(query));
-        }
+    public QueryExecutor<T> queries(String[] queries) {
+        this.queries = Arrays.asList(queries);
         return this;
     }
 
     public QueryExecutor<T> dropKey(String... keys) {
-        Set<String> keySet = new HashSet<>(Arrays.asList(keys));
-        this.criteriaRequests = this.criteriaRequests
-                .stream()
-                .filter(x -> !keySet.contains(x.key()))
-                .collect(Collectors.toList());
+        this.dropKeys = new HashSet<>(Arrays.asList(keys));
         return this;
     }
 
@@ -73,29 +64,23 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public QueryExecutor<T> sorts(Collection<String> sorts) throws SortPatternNotMatchException {
-        this.sortRequests = new LinkedList<>();
-        for (String sort : sorts) {
-            this.sortRequests.add(SortRequest.resolve(sort));
-        }
+    public QueryExecutor<T> sorts(Collection<String> sorts) {
+        this.sorts = sorts;
         return this;
     }
 
-    public QueryExecutor<T> sorts(String[] sorts) throws SortPatternNotMatchException {
-        this.sortRequests = new LinkedList<>();
-        for (String sort : sorts) {
-            this.sortRequests.add(SortRequest.resolve(sort));
-        }
+    public QueryExecutor<T> sorts(String[] sorts) {
+        this.sorts = Arrays.asList(sorts);
         return this;
     }
 
     public QueryExecutor<T> and(CriteriaRequest criteriaRequest) {
-        this.criteriaRequests.add(criteriaRequest);
+        this.andCriteriaRequests.add(criteriaRequest);
         return this;
     }
 
-    public QueryExecutor<T> and(String query) throws QueryPatternNotMatchException {
-        this.criteriaRequests.add(CriteriaRequest.resolve(query));
+    public QueryExecutor<T> and(String query) {
+        this.queries.add(query);
         return this;
     }
 
@@ -109,18 +94,31 @@ public class QueryExecutor<T> {
         return this;
     }
 
-    public Criteria criteria() throws CriteriaOperationNotSupported {
+    public Criteria criteria() throws CriteriaOperationNotSupported, QueryPatternNotMatchException {
         Criteria criteria = new Criteria();
-        List<CriteriaRequest> reducedCriteriaRequests = CriteriaRequest.reduce(criteriaRequests);
-        for (CriteriaRequest criteriaRequest : reducedCriteriaRequests) {
+        for (String query : queries) {
+            this.criteriaRequests.add(CriteriaRequest.resolve(query));
+        }
+        this.criteriaRequests.addAll(this.andCriteriaRequests);
+        List<CriteriaRequest> filtered = criteriaRequests.stream()
+                .filter(x -> !dropKeys.contains(x.key()))
+                .collect(Collectors.toList());
+        List<CriteriaRequest> reduced = CriteriaRequest.reduce(filtered);
+        for (CriteriaRequest criteriaRequest : reduced) {
             criteria = criteriaRequest.chain(criteria);
         }
         return criteria;
     }
 
-    public Sort sort() throws SortOperationNotSupported {
+    public Sort sort() throws SortOperationNotSupported, SortPatternNotMatchException {
         Sort sort = Sort.unsorted();
-        for (SortRequest sortRequest : sortRequests) {
+        for (String s : sorts) {
+            this.sortRequests.add(SortRequest.resolve(s));
+        }
+        List<SortRequest> filtered = sortRequests.stream()
+                .filter(x -> !dropKeys.contains(x.key()))
+                .collect(Collectors.toList());
+        for (SortRequest sortRequest : filtered) {
             sort = sortRequest.and(sort);
         }
         return sort;
@@ -132,5 +130,12 @@ public class QueryExecutor<T> {
         Pageable pageable = size == 0 ? Pageable.unpaged() : PageRequest.of(page, size);
         Query query = new Query(criteria);
         return mongoTemplate.find(query.with(pageable).with(sort), klass);
+    }
+
+    public long delete() throws MerijException {
+        Criteria criteria = this.criteria();
+        Query query = new Query(criteria);
+        DeleteResult result = mongoTemplate.remove(query, klass);
+        return result.getDeletedCount();
     }
 }

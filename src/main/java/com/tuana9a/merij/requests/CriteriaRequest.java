@@ -42,9 +42,9 @@ public class CriteriaRequest {
         return new CriteriaRequest().key(key).op(op).value(parsedValue);
     }
 
-    public static List<CriteriaRequest> reduce(List<CriteriaRequest> criteriaRequestList) {
+    public static List<CriteriaRequest> reduce(Collection<CriteriaRequest> criteriaRequests) {
         Map<String, CriteriaRequest> criteriaRequestHashMap = new HashMap<>();
-        for (CriteriaRequest entry : criteriaRequestList) {
+        for (CriteriaRequest entry : criteriaRequests) {
             String key = entry.key();
             CriteriaRequest existOne = criteriaRequestHashMap.get(key);
             if (existOne == null) {

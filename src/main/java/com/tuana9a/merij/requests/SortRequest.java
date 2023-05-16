@@ -30,6 +30,10 @@ public class SortRequest {
         return this;
     }
 
+    public String key() {
+        return this.key;
+    }
+
     public boolean isValid() {
         return this.key != null && this.operator != null;
     }

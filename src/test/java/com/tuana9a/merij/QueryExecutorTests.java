@@ -1,6 +1,9 @@
 package com.tuana9a.merij;
 
-import com.tuana9a.merij.exceptions.*;
+import com.tuana9a.merij.exceptions.CriteriaOperationNotSupported;
+import com.tuana9a.merij.exceptions.QueryPatternNotMatchException;
+import com.tuana9a.merij.exceptions.SortOperationNotSupported;
+import com.tuana9a.merij.exceptions.SortPatternNotMatchException;
 import com.tuana9a.merij.requests.CriteriaRequest;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
@@ -69,6 +72,7 @@ public class QueryExecutorTests {
         List<String> sorts = new LinkedList<>();
         sorts.add("age=-1");
         sorts.add("name=1");
+        sorts.add("address=1");
         QueryExecutor<?> queryExecutor = new QueryExecutor<>()
                 .queries(queries)
                 .dropKey("name")
@@ -80,7 +84,7 @@ public class QueryExecutorTests {
         Document document = criteria.getCriteriaObject();
         Document desiredDocument = desiredCriteria.getCriteriaObject();
         Assertions.assertEquals(document, desiredDocument);
-        Assertions.assertEquals(sort, Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "name")));
+        Assertions.assertEquals(sort, Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "address")));
     }
 
     @Test
@@ -88,8 +92,7 @@ public class QueryExecutorTests {
         CriteriaRequest.DEFAULT_REGEX_OPTIONS = "i";
         List<String> queries = new LinkedList<>();
         queries.add("name*=tuana9a");
-        QueryExecutor<?> queryExecutor = new QueryExecutor<>().queries(queries);
-        Criteria criteria = queryExecutor.criteria();
+        Criteria criteria = new QueryExecutor<>().queries(queries).criteria();
         Criteria desiredCriteria = Criteria.where("name").regex("tuana9a", "i");
         String document = criteria.getCriteriaObject().toJson();
         String desiredDocument = desiredCriteria.getCriteriaObject().toJson();
