@@ -99,10 +99,10 @@ public class QueryExecutor<T> {
         for (String query : queries) {
             this.criteriaRequests.add(CriteriaRequest.resolve(query));
         }
-        this.criteriaRequests.addAll(this.andCriteriaRequests);
         List<CriteriaRequest> filtered = criteriaRequests.stream()
                 .filter(x -> !dropKeys.contains(x.key()))
                 .collect(Collectors.toList());
+        filtered.addAll(this.andCriteriaRequests);
         List<CriteriaRequest> reduced = CriteriaRequest.reduce(filtered);
         for (CriteriaRequest criteriaRequest : reduced) {
             criteria = criteriaRequest.chain(criteria);
