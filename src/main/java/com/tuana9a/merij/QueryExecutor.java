@@ -15,6 +15,8 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryExecutor<T> {
+    public static MongoTemplate DEFAULT_MONGO_TEMPLATE = null;
+
     private final Class<T> klass;
     private MongoTemplate mongoTemplate;
     private int page = 0;
@@ -28,6 +30,7 @@ public class QueryExecutor<T> {
 
     public QueryExecutor(Class<T> klass) {
         this.klass = klass;
+        this.mongoTemplate = DEFAULT_MONGO_TEMPLATE;
     }
 
     public QueryExecutor<T> mongoTemplate(MongoTemplate mongoTemplate) {
