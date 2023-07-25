@@ -4,6 +4,7 @@ import com.tuana9a.merij.exceptions.CriteriaOperationNotSupported;
 import com.tuana9a.merij.exceptions.QueryPatternNotMatchException;
 import com.tuana9a.merij.exceptions.SortOperationNotSupported;
 import com.tuana9a.merij.exceptions.SortPatternNotMatchException;
+import com.tuana9a.merij.models.Person;
 import com.tuana9a.merij.requests.CriteriaRequest;
 import org.bson.Document;
 import org.junit.jupiter.api.Assertions;
@@ -20,7 +21,7 @@ public class QueryExecutorTests {
         List<String> queries = new LinkedList<>();
         queries.add("age>5");
         queries.add("age<10");
-        Criteria criteria = new QueryExecutor<>()
+        Criteria criteria = new QueryExecutor<>(Person.class)
                 .queries(queries)
                 .and(CriteriaRequest.from("age", "!=", 8))
                 .criteria();
@@ -33,7 +34,7 @@ public class QueryExecutorTests {
         queries.add("age>5");
         queries.add("age<10");
         queries.add("name==tuana9a");
-        Criteria criteria = new QueryExecutor<>()
+        Criteria criteria = new QueryExecutor<>(Person.class)
                 .queries(queries)
                 .and(CriteriaRequest.from("age", "!=", 8))
                 .criteria();
@@ -51,7 +52,7 @@ public class QueryExecutorTests {
         queries.add("age<10");
         queries.add("name==tuana9a");
         queries.add("name*=tuana9a");
-        Criteria criteria = new QueryExecutor<>()
+        Criteria criteria = new QueryExecutor<>(Person.class)
                 .queries(queries)
                 .dropKey("name")
                 .and(CriteriaRequest.from("age", "!=", 8))
@@ -73,7 +74,7 @@ public class QueryExecutorTests {
         sorts.add("age=-1");
         sorts.add("name=1");
         sorts.add("address=1");
-        QueryExecutor<?> queryExecutor = new QueryExecutor<>()
+        QueryExecutor<?> queryExecutor = new QueryExecutor<>(Person.class)
                 .queries(queries)
                 .dropKey("name")
                 .sorts(sorts)
@@ -92,7 +93,7 @@ public class QueryExecutorTests {
         CriteriaRequest.DEFAULT_REGEX_OPTIONS = "i";
         List<String> queries = new LinkedList<>();
         queries.add("name*=tuana9a");
-        Criteria criteria = new QueryExecutor<>().queries(queries).criteria();
+        Criteria criteria = new QueryExecutor<>(Person.class).queries(queries).criteria();
         Criteria desiredCriteria = Criteria.where("name").regex("tuana9a", "i");
         String document = criteria.getCriteriaObject().toJson();
         String desiredDocument = desiredCriteria.getCriteriaObject().toJson();
@@ -110,7 +111,7 @@ public class QueryExecutorTests {
         sorts.add("age=-1");
         sorts.add("name=1");
         sorts.add("address=1");
-        QueryExecutor<?> queryExecutor = new QueryExecutor<>()
+        QueryExecutor<?> queryExecutor = new QueryExecutor<>(Person.class)
                 .queries(queries)
                 .dropKey("name")
                 .sorts(sorts)

@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class QueryExecutor<T> {
-    private Class<T> klass;
+    private final Class<T> klass;
     private MongoTemplate mongoTemplate;
     private int page = 0;
     private int size = 0;
@@ -26,12 +26,8 @@ public class QueryExecutor<T> {
     private Collection<String> queries = new LinkedList<>();
     private Set<String> dropKeys = new HashSet<>();
 
-    public QueryExecutor() {
-    }
-
-    public QueryExecutor<T> klass(Class<T> klass) {
+    public QueryExecutor(Class<T> klass) {
         this.klass = klass;
-        return this;
     }
 
     public QueryExecutor<T> mongoTemplate(MongoTemplate mongoTemplate) {
