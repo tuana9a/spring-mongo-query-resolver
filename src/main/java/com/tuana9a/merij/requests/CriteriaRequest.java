@@ -12,12 +12,13 @@ import java.util.stream.Collectors;
 
 // TODO: check logic when parse
 public class CriteriaRequest {
+    public static String DEFAULT_REGEX_OPTIONS = "";
+
     private String key;
     private Object value;
     private String operator;
     private CriteriaRequest next;
     private String regexOptions;
-    public static String DEFAULT_REGEX_OPTIONS = "";
 
     private CriteriaRequest() {
         this.regexOptions = DEFAULT_REGEX_OPTIONS;
