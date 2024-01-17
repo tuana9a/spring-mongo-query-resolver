@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>com.tuana9a</groupId>
-    <artifactId>merij</artifactId>
-    <version>1.3.0</version>
+    <artifactId>spring-data-mongodb</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>Resolve mongo criteria query from string</description>
-    <url>http://github.com/tuana9a/merij</url>
+    <description>A wrapper around spring-data-mongodb</description>
+    <url>http://github.com/tuana9a/spring-data-mongodb</url>
 
     <licenses>
         <license>
@@ -29,15 +29,15 @@
 
     <developers>
         <developer>
-            <name>Tuan Nguyen Minh</name>
+            <name>Nguyen Minh Tuan</name>
             <email>tuana9a@gmail.com</email>
         </developer>
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/tuana9a/merij.git</connection>
-        <developerConnection>scm:git:ssh://github.com:tuana9a/merij.git</developerConnection>
-        <url>https://github.com/tuana9a/merij/tree/main</url>
+        <connection>scm:git:git://github.com/tuana9a/spring-data-mongodb.git</connection>
+        <developerConnection>scm:git:ssh://github.com:tuana9a/spring-data-mongodb.git</developerConnection>
+        <url>https://github.com/tuana9a/spring-data-mongodb/tree/main</url>
     </scm>
 
     <properties>
@@ -52,11 +52,15 @@
             <artifactId>spring-boot-starter-data-mongodb</artifactId>
             <scope>provided</scope>
         </dependency>
-
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <scope>provided</scope>
         </dependency>
     </dependencies>
 

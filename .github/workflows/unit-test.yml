@@ -1,0 +1,26 @@
+name: Unit Test
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "adopt"
+          java-version: "8"
+
+      - name: Build with Maven
+        run: mvn compile
+
+      - name: Run tests
+        run: mvn test
