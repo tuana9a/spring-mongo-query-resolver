@@ -19,6 +19,9 @@ jobs:
           distribution: "corretto"
           java-version: "8"
 
+      - name: download dependencies
+        run: mvn dependency:resolve
+
       - name: build
         run: mvn compile
 
