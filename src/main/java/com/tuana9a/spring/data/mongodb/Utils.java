@@ -1,9 +1,9 @@
-package com.tuana9a.merij.utils;
+package com.tuana9a.spring.data.mongodb;
 
 import org.bson.types.ObjectId;
 
-public class StringUtils {
-    public static Object auto(String input) {
+public class Utils {
+    public static Object resolve(String input) {
         try {
             if (input == null) return null;
             if (input.matches("^\\s$")) return null;

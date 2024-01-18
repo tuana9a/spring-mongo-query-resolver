@@ -1,0 +1,27 @@
+name: unit test
+
+on:
+  push:
+    branches:
+      - "*"
+
+jobs:
+  unit-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: checkout code
+        uses: actions/checkout@v4
+
+      - name: set up JDK
+        uses: actions/setup-java@v3
+        with:
+          distribution: "corretto"
+          java-version: "8"
+          cache: 'maven'
+
+      - name: build
+        run: mvn compile
+
+      - name: run tests
+        run: mvn test
