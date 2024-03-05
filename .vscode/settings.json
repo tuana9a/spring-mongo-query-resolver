@@ -1,5 +1,6 @@
 {
     "java.configuration.updateBuildConfiguration": "interactive",
     "java.compile.nullAnalysis.mode": "automatic",
-    "java.format.settings.url": ".vscode/eclipse-formatter.xml"
+    "java.format.settings.url": ".vscode/eclipse-formatter.xml",
+    "maven.view": "flat"
 }
