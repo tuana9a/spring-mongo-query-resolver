@@ -54,6 +54,10 @@ public class ToolBox {
         return new SortPart(key, order);
     }
 
+    public static Criteria buildCriteria(Collection<CriteriaPart> parts) {
+        return buildCriteria(parts, Opts.DEFAULT);
+    }
+
     public static Criteria buildCriteria(Collection<CriteriaPart> parts, Opts opts) {
         Map<String, Queue<CriteriaPart>> table = new HashMap<>();
         for (CriteriaPart part : parts) {
