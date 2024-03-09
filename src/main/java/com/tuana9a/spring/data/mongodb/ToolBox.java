@@ -31,7 +31,7 @@ public class ToolBox {
         String key = matcher.group(1).trim();
         String op = matcher.group(2).trim();
         String stringValue = matcher.group(3);
-        if (op.equals(Config.IN)) {
+        if (op.equals(Operator.IN)) {
             List<?> value = Arrays.stream(stringValue.split(opts.inOperatorDelimiter))
                     .map(x -> Utils.resolve(x.trim()))
                     .collect(Collectors.toList());
@@ -76,21 +76,21 @@ public class ToolBox {
             CriteriaPart firstOne = queue.poll();
             String key = firstOne.getKey();
             String op = firstOne.getOperator();
-            if (op.equals(Config.EQ)) {
+            if (op.equals(Operator.EQ)) {
                 criteria = criteria.and(key).is(firstOne.getValue());
-            } else if (op.equals(Config.GT)) {
+            } else if (op.equals(Operator.GT)) {
                 criteria = criteria.and(key).gt(firstOne.getValue());
-            } else if (op.equals(Config.LT)) {
+            } else if (op.equals(Operator.LT)) {
                 criteria = criteria.and(key).lt(firstOne.getValue());
-            } else if (op.equals(Config.GTE)) {
+            } else if (op.equals(Operator.GTE)) {
                 criteria = criteria.and(key).gte(firstOne.getValue());
-            } else if (op.equals(Config.LTE)) {
+            } else if (op.equals(Operator.LTE)) {
                 criteria = criteria.and(key).lte(firstOne.getValue());
-            } else if (op.equals(Config.NE)) {
+            } else if (op.equals(Operator.NE)) {
                 criteria = criteria.and(key).ne(firstOne.getValue());
-            } else if (op.equals(Config.REGEX)) {
+            } else if (op.equals(Operator.REGEX)) {
                 criteria = criteria.and(key).regex(String.valueOf(firstOne.getValue()), opts.regexOptions);
-            } else if (op.equals(Config.IN)) {
+            } else if (op.equals(Operator.IN)) {
                 criteria = criteria.and(key).in((List<?>) firstOne.getValue());
             } else {
                 log.warn("operator not supported: {}", op);
@@ -98,21 +98,21 @@ public class ToolBox {
             CriteriaPart next = queue.poll();
             while (!isNull(next)) {
                 op = next.getOperator();
-                if (op.equals(Config.EQ)) {
+                if (op.equals(Operator.EQ)) {
                     criteria = criteria.is(next.getValue());
-                } else if (op.equals(Config.GT)) {
+                } else if (op.equals(Operator.GT)) {
                     criteria = criteria.gt(next.getValue());
-                } else if (op.equals(Config.LT)) {
+                } else if (op.equals(Operator.LT)) {
                     criteria = criteria.lt(next.getValue());
-                } else if (op.equals(Config.GTE)) {
+                } else if (op.equals(Operator.GTE)) {
                     criteria = criteria.gte(next.getValue());
-                } else if (op.equals(Config.LTE)) {
+                } else if (op.equals(Operator.LTE)) {
                     criteria = criteria.lte(next.getValue());
-                } else if (op.equals(Config.NE)) {
+                } else if (op.equals(Operator.NE)) {
                     criteria = criteria.ne(next.getValue());
-                } else if (op.equals(Config.REGEX)) {
+                } else if (op.equals(Operator.REGEX)) {
                     criteria = criteria.regex(String.valueOf(next.getValue()), opts.regexOptions);
-                } else if (op.equals(Config.IN)) {
+                } else if (op.equals(Operator.IN)) {
                     criteria = criteria.in((List<?>) next.getValue());
                 } else {
                     log.warn("operator not supported: {}", op);
@@ -128,9 +128,9 @@ public class ToolBox {
         for (SortPart part : parts) {
             String key = part.getKey();
             String order = part.getOrder();
-            if (order.equals(Config.ASC)) {
+            if (order.equals(Operator.ASC)) {
                 sort = sort.and(Sort.by(Sort.Direction.ASC, key));
-            } else if (order.equals(Config.DESC)) {
+            } else if (order.equals(Operator.DESC)) {
                 sort = sort.and(Sort.by(Sort.Direction.DESC, key));
             } else {
                 log.warn("sort operation not supported: {}", order);
