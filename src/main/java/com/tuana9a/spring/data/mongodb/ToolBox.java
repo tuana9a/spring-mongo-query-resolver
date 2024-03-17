@@ -76,6 +76,7 @@ public class ToolBox {
             CriteriaPart firstOne = queue.poll();
             String key = firstOne.getKey();
             String op = firstOne.getOperator();
+            // TODO: table of processor: HashMap<String, Function> -> Criteria
             if (op.equals(Operator.EQ)) {
                 criteria = criteria.and(key).is(firstOne.getValue());
             } else if (op.equals(Operator.GT)) {
@@ -98,6 +99,7 @@ public class ToolBox {
             CriteriaPart next = queue.poll();
             while (!isNull(next)) {
                 op = next.getOperator();
+                // TODO: table of processor: HashMap<String, Function> -> Criteria
                 if (op.equals(Operator.EQ)) {
                     criteria = criteria.is(next.getValue());
                 } else if (op.equals(Operator.GT)) {

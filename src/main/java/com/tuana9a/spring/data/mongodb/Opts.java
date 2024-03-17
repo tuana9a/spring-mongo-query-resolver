@@ -8,8 +8,8 @@ public class Opts {
     public String inOperatorDelimiter;
 
     public Opts() {
-        this.delimiter = Config.DEFAULT_DELIMITER;
-        this.regexOptions = Config.DEFAULT_REGEX_OPTIONS;
-        this.inOperatorDelimiter = Config.DEFAULT_IN_OPERATOR_DELIMITER;
+        this.delimiter = Config.DELIMITER;
+        this.regexOptions = Config.REGEX_OPTIONS;
+        this.inOperatorDelimiter = Config.LIST_VALUE_DELIMITER;
     }
 }

@@ -1,9 +1,9 @@
 package com.tuana9a.spring.data.mongodb;
 
 public class Config {
-    public static String DEFAULT_REGEX_OPTIONS = "";
-    public static String DEFAULT_DELIMITER = ",";
-    public static String DEFAULT_IN_OPERATOR_DELIMITER = ";";
+    public static String REGEX_OPTIONS = "";
+    public static String DELIMITER = ",";
+    public static String LIST_VALUE_DELIMITER = ";";
     public @Deprecated static String EQ = Operator.EQ;
     public @Deprecated static String NE = Operator.NE;
     public @Deprecated static String GT = Operator.GT;
