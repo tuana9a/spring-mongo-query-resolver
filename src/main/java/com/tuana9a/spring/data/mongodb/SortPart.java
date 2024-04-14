@@ -8,6 +8,7 @@ public class SortPart {
 
     private @Getter @Setter String key;
     private @Getter @Setter String order;
+    public boolean isError = false;
 
     public SortPart(String key, String order) {
         this.key = key;
@@ -15,6 +16,8 @@ public class SortPart {
     }
 
     public static SortPart error() {
-        return new SortPart(null, null);
+        SortPart part = new SortPart(null, null);
+        part.isError = true;
+        return part;
     }
 }
