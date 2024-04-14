@@ -9,7 +9,7 @@ public class CriteriaPart {
     private @Getter @Setter String key;
     private @Getter @Setter Object value;
     private @Getter @Setter String operator;
-    public boolean isError;
+    public boolean isError = false;
 
     public CriteriaPart(String key, String operator, Object value) {
         this.key = key;
