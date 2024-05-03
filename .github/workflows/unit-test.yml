@@ -4,11 +4,12 @@ on:
   push:
     branches:
       - "*"
+    branches-ignore:
+      - "release-*"
 
 jobs:
   unit-test:
     runs-on: ubuntu-latest
-
     steps:
       - name: checkout code
         uses: actions/checkout@v4
