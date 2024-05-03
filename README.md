@@ -28,7 +28,7 @@ Add dependency into your `pom.xml`
   <dependency>
       <groupId>com.tuana9a</groupId>
       <artifactId>spring-data-mongodb</artifactId>
-      <version>2.1.1</version>
+      <version>2.2.0</version>
   </dependency>
 <dependencies>
 ```
