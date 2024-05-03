@@ -18,15 +18,12 @@ import lombok.extern.slf4j.Slf4j;
 import static java.util.Objects.isNull;
 import java.util.Arrays;
 
-@Slf4j
 public class ToolBox {
-    public static CriteriaPart buildCriteriaPart(String input, Opts opts) {
+    public static CriteriaPart buildCriteriaPart(String input, Opts opts) throws Error {
         Pattern pattern = Pattern.compile(CriteriaPart.REGEX_PATTERN);
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
-            String message = input + " not match " + CriteriaPart.REGEX_PATTERN;
-            log.warn("invalid query: {}", message);
-            return CriteriaPart.error();
+            throw new InvalidPartError(input, "not match " + CriteriaPart.REGEX_PATTERN);
         }
         String key = matcher.group(1).trim();
         String op = matcher.group(2).trim();
@@ -41,24 +38,22 @@ public class ToolBox {
         return new CriteriaPart(key, op, value);
     }
 
-    public static SortPart buildSortPart(String input) {
+    public static SortPart buildSortPart(String input) throws Error {
         Pattern pattern = Pattern.compile(SortPart.REGEX_PATTERN);
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
-            String message = input + " not match " + SortPart.REGEX_PATTERN;
-            log.warn("invalid sort: {}", message);
-            return SortPart.error();
+            throw new InvalidPartError(input, "not match " + SortPart.REGEX_PATTERN);
         }
         String key = matcher.group(1).trim();
         String order = matcher.group(2).trim();
         return new SortPart(key, order);
     }
 
-    public static Criteria buildCriteria(Collection<CriteriaPart> parts) {
+    public static Criteria buildCriteria(Collection<CriteriaPart> parts) throws Error {
         return buildCriteria(parts, Opts.DEFAULT);
     }
 
-    public static Criteria buildCriteria(Collection<CriteriaPart> parts, Opts opts) {
+    public static Criteria buildCriteria(Collection<CriteriaPart> parts, Opts opts)  throws Error{
         Map<String, Queue<CriteriaPart>> table = new HashMap<>();
         for (CriteriaPart part : parts) {
             String key = part.getKey();
@@ -94,7 +89,7 @@ public class ToolBox {
             } else if (op.equals(Operator.IN)) {
                 criteria = criteria.and(key).in((List<?>) firstOne.getValue());
             } else {
-                log.warn("operator not supported: {}", op);
+                throw new InvalidOperatorError(op);
             }
             CriteriaPart next = queue.poll();
             while (!isNull(next)) {
@@ -117,7 +112,7 @@ public class ToolBox {
                 } else if (op.equals(Operator.IN)) {
                     criteria = criteria.in((List<?>) next.getValue());
                 } else {
-                    log.warn("operator not supported: {}", op);
+                    throw new InvalidOperatorError(op);
                 }
                 next = queue.poll();
             }
@@ -125,7 +120,7 @@ public class ToolBox {
         return criteria;
     }
 
-    public static Sort buildSort(Collection<SortPart> parts) {
+    public static Sort buildSort(Collection<SortPart> parts) throws InvalidOrderError {
         Sort sort = Sort.unsorted();
         for (SortPart part : parts) {
             String key = part.getKey();
@@ -135,7 +130,7 @@ public class ToolBox {
             } else if (order.equals(Operator.DESC)) {
                 sort = sort.and(Sort.by(Sort.Direction.DESC, key));
             } else {
-                log.warn("sort operation not supported: {}", order);
+                throw new InvalidOrderError(order);
             }
         }
         return sort;

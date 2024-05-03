@@ -1,10 +1,8 @@
 package com.tuana9a.spring.data.mongodb;
 
-import java.util.Arrays;
 import java.util.Collection;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.stream.Collectors;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.data.domain.PageRequest;
@@ -14,7 +12,7 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 public class ToolBoxTests {
     @Test
-    public void testIs() {
+    public void testIs() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("name==tuana9a", opts));
@@ -24,7 +22,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testNe() {
+    public void testNe() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("name!=tuana9a", opts));
@@ -34,7 +32,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testGt() {
+    public void testGt() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("age>10", opts));
@@ -44,7 +42,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testLt() {
+    public void testLt() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("age<10", opts));
@@ -54,7 +52,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testGte() {
+    public void testGte() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("age>=10", opts));
@@ -64,7 +62,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testLte() {
+    public void testLte() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("age<=10", opts));
@@ -74,7 +72,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testIn() {
+    public void testIn() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("ids@=1;2;3", opts));
@@ -84,7 +82,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testInDelimiter() {
+    public void testInDelimiter() throws Error {
         Opts opts = new Opts();
         opts.inOperatorDelimiter = ":";
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
@@ -95,7 +93,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testEqNull() {
+    public void testEqNull() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("name==null", opts));
@@ -104,7 +102,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testEqUndefined() {
+    public void testEqUndefined() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("name==undefined", opts));
@@ -113,7 +111,7 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testLtGt() {
+    public void testLtGt() throws Error {
         Opts opts = new Opts();
         List<CriteriaPart> parts = new LinkedList<CriteriaPart>();
         parts.add(ToolBox.buildCriteriaPart("age>5", opts));
@@ -124,10 +122,13 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testCriteria() {
-        String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003,error-should-be-ignored";
+    public void testCriteria() throws Error {
+        String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003";
         Opts opts = new Opts();
-        Collection<CriteriaPart> parts = Arrays.stream(q.split(",")).map(x -> ToolBox.buildCriteriaPart(x, opts)).filter(x -> !x.isError).collect(Collectors.toList());
+        List<CriteriaPart> parts = new LinkedList<>();
+        for (String x : q.split(",")) {
+            parts.add(ToolBox.buildCriteriaPart(x, opts));
+        }
         Criteria criteria = ToolBox.buildCriteria(parts, opts);
         Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8)
                 .and("name").is("tuana9a")
@@ -137,21 +138,41 @@ public class ToolBoxTests {
     }
 
     @Test
-    public void testSort() {
+    public void testInvalidPart() {
+        String q = "age>5,age<10,age!=8,name==tuana9a,error-should-be-thrown";
+        Opts opts = new Opts();
+        Assertions.assertThrows(InvalidPartError.class, () -> {
+            List<CriteriaPart> parts = new LinkedList<>();
+            for (String x : q.split(",")) {
+                parts.add(ToolBox.buildCriteriaPart(x, opts));
+            }
+        });
+    }
+
+    @Test
+    public void testSort() throws Error {
         String s = "age=-1,address=1";
-        Collection<SortPart> parts = Arrays.stream(s.split(",")).map(x -> ToolBox.buildSortPart(x)).collect(Collectors.toList());
+        Collection<SortPart> parts = new LinkedList<>();
+        for (String x : s.split(",")) {
+            parts.add(ToolBox.buildSortPart(x));
+        }
         Sort sort = ToolBox.buildSort(parts);
-        // Sort desiredSort = Sort.by(Sort.Direction.ASC, "address").and(Sort.by(Sort.Direction.DESC, "address")); // this will not work, below will work
+        /* this will not work
+        Sort desiredSort = Sort.by(Sort.Direction.ASC, "address").and(Sort.by(Sort.Direction.DESC, "address"));
+        */
         Sort desiredSort = Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "address"));
         Assertions.assertEquals(sort, desiredSort);
     }
 
     @Test
-    public void testCriteriaRegex() {
+    public void testCriteriaRegex() throws Error {
         Opts opts = new Opts();
         opts.regexOptions = "i";
         String q = "name*=tuana9a,address*=^9a$";
-        List<CriteriaPart> parts = Arrays.asList(q.split(",")).stream().map(x -> ToolBox.buildCriteriaPart(x, opts)).collect(Collectors.toList());
+        List<CriteriaPart> parts = new LinkedList<>();
+        for (String x : q.split(",")) {
+            parts.add(ToolBox.buildCriteriaPart(x, opts));
+        }
         Criteria criteria = ToolBox.buildCriteria(parts, opts);
         Criteria desiredCriteria = Criteria.where("address").regex("^9a$", "i").and("name").regex("tuana9a", "i");
         Assertions.assertEquals(criteria, desiredCriteria);
