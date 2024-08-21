@@ -11,6 +11,7 @@ This library's formerly name is "merij", "spring-data-mongodb"
 Resolve http query string to mongo criteria query and mongo sort.
 
 Query operation support
+
 - [x] $eq
 - [x] $lt
 - [x] $gt
@@ -21,6 +22,7 @@ Query operation support
 - [x] $regex
 
 Sort operation support
+
 - [x] asc
 - [x] desc
 
@@ -31,18 +33,20 @@ Add dependency into your `pom.xml`
 `pom.xml`
 
 ```xml
+
 <dependencies>
-  <dependency>
-      <groupId>com.tuana9a</groupId>
-      <artifactId>spring-mongo-query-resolver</artifactId>
-      <version>3.0.0</version>
-  </dependency>
-<dependencies>
+    <dependency>
+        <groupId>com.tuana9a</groupId>
+        <artifactId>spring-mongo-query-resolver</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+    <dependencies>
 ```
 
 ## criteria query
 
 ```java
+
 @Test
 public void testCriteria() throws Error {
     String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003";
@@ -63,6 +67,7 @@ public void testCriteria() throws Error {
 ## sort
 
 ```java
+
 @Test
 public void testSort() throws Error {
     String s = "age=-1,address=1";

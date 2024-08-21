@@ -15,7 +15,7 @@ public class SortTests {
     }
 
     @Test
-    public void mustReAssignItToWork    () {
+    public void mustReAssignItToWork() {
         Sort sort = Sort.unsorted();
         sort = sort.and(Sort.by(Sort.Direction.ASC, "age"));
         sort = sort.and(Sort.by(Sort.Direction.DESC, "name"));

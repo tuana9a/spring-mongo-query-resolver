@@ -2,9 +2,9 @@ package com.tuana9a.spring.mongo.qrisolver.errors;
 
 import lombok.Getter;
 
+@Getter
 public class InvalidOperatorError extends Error {
-    @Getter
-    private String op;
+    private final String op;
 
     public InvalidOperatorError(String op) {
         super("InvalidOperator: " + op);
