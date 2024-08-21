@@ -1,4 +1,4 @@
-package com.tuana9a.spring.mongo.qrisolver;
+package com.tuana9a.spring.mongo.qrisolver.errors;
 
 import lombok.Getter;
 

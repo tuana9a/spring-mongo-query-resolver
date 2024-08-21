@@ -34,8 +34,8 @@ Add dependency into your `pom.xml`
 <dependencies>
   <dependency>
       <groupId>com.tuana9a</groupId>
-      <artifactId>spring-data-mongodb</artifactId>
-      <version>2.2.0</version>
+      <artifactId>spring-mongo-query-resolver</artifactId>
+      <version>3.0.0</version>
   </dependency>
 <dependencies>
 ```

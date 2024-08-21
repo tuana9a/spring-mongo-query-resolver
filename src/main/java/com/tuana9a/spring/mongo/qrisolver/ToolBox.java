@@ -1,48 +1,50 @@
 package com.tuana9a.spring.mongo.qrisolver;
 
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Queue;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import java.util.stream.Collectors;
-
+import com.tuana9a.spring.mongo.qrisolver.configs.QueryResolverConfig;
+import com.tuana9a.spring.mongo.qrisolver.errors.Error;
+import com.tuana9a.spring.mongo.qrisolver.errors.InvalidOperatorError;
+import com.tuana9a.spring.mongo.qrisolver.errors.InvalidOrderError;
+import com.tuana9a.spring.mongo.qrisolver.errors.InvalidPartError;
+import com.tuana9a.spring.mongo.qrisolver.payloads.CriteriaPart;
+import com.tuana9a.spring.mongo.qrisolver.payloads.SortPart;
+import com.tuana9a.spring.mongo.qrisolver.utils.Utils;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.mongodb.core.query.Criteria;
-import lombok.extern.slf4j.Slf4j;
+
+import java.util.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
+
 import static java.util.Objects.isNull;
-import java.util.Arrays;
 
 public class ToolBox {
-    public static CriteriaPart buildCriteriaPart(String input, Opts opts) throws Error {
-        Pattern pattern = Pattern.compile(CriteriaPart.REGEX_PATTERN);
+    public static CriteriaPart buildCriteriaPart(String input) throws Error {
+        Pattern pattern = Pattern.compile(QueryResolverConfig.CRITERIA_PART_REGEX_PATTERN);
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
-            throw new InvalidPartError(input, "not match " + CriteriaPart.REGEX_PATTERN);
+            throw new InvalidPartError(input, "not match " + QueryResolverConfig.CRITERIA_PART_REGEX_PATTERN);
         }
         String key = matcher.group(1).trim();
         String op = matcher.group(2).trim();
         String stringValue = matcher.group(3);
-        if (op.equals(Operator.IN)) {
-            List<?> value = Arrays.stream(stringValue.split(opts.inOperatorDelimiter))
-                    .map(x -> Utils.resolve(x.trim()))
+        if (op.equals(QueryResolverConfig.Operator.IN)) {
+            List<?> value = Arrays.stream(stringValue.split(QueryResolverConfig.LIST_VALUE_DELIMITER))
+                    .map(x -> Utils.resolveValue(x.trim()))
                     .collect(Collectors.toList());
             return new CriteriaPart(key, op, value);
         }
-        Object value = Utils.resolve(stringValue.trim());
+        Object value = Utils.resolveValue(stringValue.trim());
         return new CriteriaPart(key, op, value);
     }
 
     public static SortPart buildSortPart(String input) throws Error {
-        Pattern pattern = Pattern.compile(SortPart.REGEX_PATTERN);
+        Pattern pattern = Pattern.compile(QueryResolverConfig.SORT_PART_REGEX_PATTERN);
         Matcher matcher = pattern.matcher(input);
         if (!matcher.find()) {
-            throw new InvalidPartError(input, "not match " + SortPart.REGEX_PATTERN);
+            throw new InvalidPartError(input, "not match " + QueryResolverConfig.SORT_PART_REGEX_PATTERN);
         }
         String key = matcher.group(1).trim();
         String order = matcher.group(2).trim();
@@ -50,10 +52,6 @@ public class ToolBox {
     }
 
     public static Criteria buildCriteria(Collection<CriteriaPart> parts) throws Error {
-        return buildCriteria(parts, Opts.DEFAULT);
-    }
-
-    public static Criteria buildCriteria(Collection<CriteriaPart> parts, Opts opts)  throws Error{
         Map<String, Queue<CriteriaPart>> table = new HashMap<>();
         for (CriteriaPart part : parts) {
             String key = part.getKey();
@@ -72,21 +70,21 @@ public class ToolBox {
             String key = firstOne.getKey();
             String op = firstOne.getOperator();
             // TODO: table of processor: HashMap<String, Function> -> Criteria
-            if (op.equals(Operator.EQ)) {
+            if (op.equals(QueryResolverConfig.Operator.EQ)) {
                 criteria = criteria.and(key).is(firstOne.getValue());
-            } else if (op.equals(Operator.GT)) {
+            } else if (op.equals(QueryResolverConfig.Operator.GT)) {
                 criteria = criteria.and(key).gt(firstOne.getValue());
-            } else if (op.equals(Operator.LT)) {
+            } else if (op.equals(QueryResolverConfig.Operator.LT)) {
                 criteria = criteria.and(key).lt(firstOne.getValue());
-            } else if (op.equals(Operator.GTE)) {
+            } else if (op.equals(QueryResolverConfig.Operator.GTE)) {
                 criteria = criteria.and(key).gte(firstOne.getValue());
-            } else if (op.equals(Operator.LTE)) {
+            } else if (op.equals(QueryResolverConfig.Operator.LTE)) {
                 criteria = criteria.and(key).lte(firstOne.getValue());
-            } else if (op.equals(Operator.NE)) {
+            } else if (op.equals(QueryResolverConfig.Operator.NE)) {
                 criteria = criteria.and(key).ne(firstOne.getValue());
-            } else if (op.equals(Operator.REGEX)) {
-                criteria = criteria.and(key).regex(String.valueOf(firstOne.getValue()), opts.regexOptions);
-            } else if (op.equals(Operator.IN)) {
+            } else if (op.equals(QueryResolverConfig.Operator.REGEX)) {
+                criteria = criteria.and(key).regex(String.valueOf(firstOne.getValue()), QueryResolverConfig.REGEX_OPTIONS);
+            } else if (op.equals(QueryResolverConfig.Operator.IN)) {
                 criteria = criteria.and(key).in((List<?>) firstOne.getValue());
             } else {
                 throw new InvalidOperatorError(op);
@@ -95,21 +93,21 @@ public class ToolBox {
             while (!isNull(next)) {
                 op = next.getOperator();
                 // TODO: table of processor: HashMap<String, Function> -> Criteria
-                if (op.equals(Operator.EQ)) {
+                if (op.equals(QueryResolverConfig.Operator.EQ)) {
                     criteria = criteria.is(next.getValue());
-                } else if (op.equals(Operator.GT)) {
+                } else if (op.equals(QueryResolverConfig.Operator.GT)) {
                     criteria = criteria.gt(next.getValue());
-                } else if (op.equals(Operator.LT)) {
+                } else if (op.equals(QueryResolverConfig.Operator.LT)) {
                     criteria = criteria.lt(next.getValue());
-                } else if (op.equals(Operator.GTE)) {
+                } else if (op.equals(QueryResolverConfig.Operator.GTE)) {
                     criteria = criteria.gte(next.getValue());
-                } else if (op.equals(Operator.LTE)) {
+                } else if (op.equals(QueryResolverConfig.Operator.LTE)) {
                     criteria = criteria.lte(next.getValue());
-                } else if (op.equals(Operator.NE)) {
+                } else if (op.equals(QueryResolverConfig.Operator.NE)) {
                     criteria = criteria.ne(next.getValue());
-                } else if (op.equals(Operator.REGEX)) {
-                    criteria = criteria.regex(String.valueOf(next.getValue()), opts.regexOptions);
-                } else if (op.equals(Operator.IN)) {
+                } else if (op.equals(QueryResolverConfig.Operator.REGEX)) {
+                    criteria = criteria.regex(String.valueOf(next.getValue()), QueryResolverConfig.REGEX_OPTIONS);
+                } else if (op.equals(QueryResolverConfig.Operator.IN)) {
                     criteria = criteria.in((List<?>) next.getValue());
                 } else {
                     throw new InvalidOperatorError(op);
@@ -125,9 +123,9 @@ public class ToolBox {
         for (SortPart part : parts) {
             String key = part.getKey();
             String order = part.getOrder();
-            if (order.equals(Operator.ASC)) {
+            if (order.equals(QueryResolverConfig.Operator.ASC)) {
                 sort = sort.and(Sort.by(Sort.Direction.ASC, key));
-            } else if (order.equals(Operator.DESC)) {
+            } else if (order.equals(QueryResolverConfig.Operator.DESC)) {
                 sort = sort.and(Sort.by(Sort.Direction.DESC, key));
             } else {
                 throw new InvalidOrderError(order);
