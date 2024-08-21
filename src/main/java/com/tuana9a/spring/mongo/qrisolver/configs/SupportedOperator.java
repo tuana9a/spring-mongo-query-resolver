@@ -1,6 +1,6 @@
-package com.tuana9a.spring.data.mongodb;
+package com.tuana9a.spring.mongo.qrisolver.configs;
 
-public class Operator {
+public class SupportedOperator {
     public static String EQ = "==";
     public static String NE = "!=";
     public static String GT = ">";

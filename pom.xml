@@ -12,13 +12,13 @@
     </parent>
 
     <groupId>com.tuana9a</groupId>
-    <artifactId>spring-data-mongodb</artifactId>
-    <version>2.2.0</version>
+    <artifactId>spring-mongo-query-resolver</artifactId>
+    <version>3.0.0</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A wrapper around spring-data-mongodb</description>
-    <url>http://github.com/tuana9a/spring-data-mongodb</url>
+    <description>Resolve http query string to mongo criteria query and mongo sort.</description>
+    <url>http://github.com/tuana9a/spring-mongo-query-resolver</url>
 
     <licenses>
         <license>
@@ -35,9 +35,9 @@
     </developers>
 
     <scm>
-        <connection>scm:git:git://github.com/tuana9a/spring-data-mongodb.git</connection>
-        <developerConnection>scm:git:ssh://github.com:tuana9a/spring-data-mongodb.git</developerConnection>
-        <url>https://github.com/tuana9a/spring-data-mongodb/tree/main</url>
+        <connection>scm:git:git://github.com/tuana9a/spring-mongo-query-resolver.git</connection>
+        <developerConnection>scm:git:ssh://github.com:tuana9a/spring-mongo-query-resolver.git</developerConnection>
+        <url>https://github.com/tuana9a/spring-mongo-query-resolver/tree/main</url>
     </scm>
 
     <properties>
@@ -120,11 +120,11 @@
                 <version>1.6.7</version>
                 <extensions>true</extensions>
                 <configuration>
-                  <serverId>ossrh</serverId>
-                  <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
-                  <autoReleaseAfterClose>true</autoReleaseAfterClose>
+                    <serverId>ossrh</serverId>
+                    <nexusUrl>https://s01.oss.sonatype.org/</nexusUrl>
+                    <autoReleaseAfterClose>true</autoReleaseAfterClose>
                 </configuration>
-              </plugin>
+            </plugin>
         </plugins>
     </build>
 

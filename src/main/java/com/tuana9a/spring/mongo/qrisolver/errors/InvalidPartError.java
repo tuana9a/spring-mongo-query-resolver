@@ -1,12 +1,11 @@
-package com.tuana9a.spring.data.mongodb;
+package com.tuana9a.spring.mongo.qrisolver.errors;
 
 import lombok.Getter;
 
+@Getter
 public class InvalidPartError extends Error {
-    @Getter
-    private String part;
-    @Getter
-    private String reason;
+    private final String part;
+    private final String reason;
 
     public InvalidPartError(String part, String reason) {
         super("InvalidPart: " + part + " " + reason);

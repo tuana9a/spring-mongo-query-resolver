@@ -1,41 +1,52 @@
-# spring-data-mongodb (formerly "merij")
+# spring-mongo-query-resolver
 
-The project's renamed "merij" to spring-data-mongodb
+This library's formerly name is "merij", "spring-data-mongodb"
 
-# What is this repo
+- release 1.x merij
+- release 2.x spring-data-mongodb
+- release > 3.x spring-mongo-query-resolver
 
-This is a wrapper around spring data mongodb with some utils that I added, for example:
+# what is this repo
 
-- [x] Resolve query string to spring-data-mongodb criteria query.
-  - [x] eq
-  - [x] lt
-  - [x] gt
-  - [x] lte
-  - [x] gte
-  - [x] in
-  - [x] ne
-  - [x] regex
-- [x] Resolve query string to spring-data-mongodb sort query.
+Resolve http query string to mongo criteria query and mongo sort.
 
-# How to use
+Query operation support
+
+- [x] $eq
+- [x] $lt
+- [x] $gt
+- [x] $lte
+- [x] $gte
+- [x] $in
+- [x] $ne
+- [x] $regex
+
+Sort operation support
+
+- [x] asc
+- [x] desc
+
+# how to use
 
 Add dependency into your `pom.xml`
 
 `pom.xml`
 
 ```xml
+
 <dependencies>
-  <dependency>
-      <groupId>com.tuana9a</groupId>
-      <artifactId>spring-data-mongodb</artifactId>
-      <version>2.2.0</version>
-  </dependency>
-<dependencies>
+    <dependency>
+        <groupId>com.tuana9a</groupId>
+        <artifactId>spring-mongo-query-resolver</artifactId>
+        <version>3.0.0</version>
+    </dependency>
+    <dependencies>
 ```
 
 ## criteria query
 
 ```java
+
 @Test
 public void testCriteria() throws Error {
     String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003";
@@ -56,6 +67,7 @@ public void testCriteria() throws Error {
 ## sort
 
 ```java
+
 @Test
 public void testSort() throws Error {
     String s = "age=-1,address=1";

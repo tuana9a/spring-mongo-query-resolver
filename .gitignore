@@ -27,3 +27,4 @@ target/
 # @tuana9a
 *tmp*
 *secret*
+.vscode
