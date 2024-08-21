@@ -1,4 +1,4 @@
-package com.tuana9a.spring.data.mongodb;
+package com.tuana9a.spring.mongo.qrisolver;
 
 import java.util.Collection;
 import java.util.HashMap;

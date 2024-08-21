@@ -1,23 +1,30 @@
-# spring-data-mongodb (formerly "merij")
+# spring-mongo-query-resolver
 
-The project's renamed "merij" to spring-data-mongodb
+This library's formerly name is "merij", "spring-data-mongodb"
 
-# What is this repo
+- release 1.x merij
+- release 2.x spring-data-mongodb
+- release > 3.x spring-mongo-query-resolver
 
-This is a wrapper around spring data mongodb with some utils that I added, for example:
+# what is this repo
 
-- [x] Resolve query string to spring-data-mongodb criteria query.
-  - [x] eq
-  - [x] lt
-  - [x] gt
-  - [x] lte
-  - [x] gte
-  - [x] in
-  - [x] ne
-  - [x] regex
-- [x] Resolve query string to spring-data-mongodb sort query.
+Resolve http query string to mongo criteria query and mongo sort.
 
-# How to use
+Query operation support
+- [x] $eq
+- [x] $lt
+- [x] $gt
+- [x] $lte
+- [x] $gte
+- [x] $in
+- [x] $ne
+- [x] $regex
+
+Sort operation support
+- [x] asc
+- [x] desc
+
+# how to use
 
 Add dependency into your `pom.xml`
 

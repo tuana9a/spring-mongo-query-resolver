@@ -1,4 +1,4 @@
-package com.tuana9a.spring.data.mongodb;
+package com.tuana9a.spring.mongo.qrisolver;
 
 public class Opts {
     public static Opts DEFAULT = new Opts();

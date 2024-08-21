@@ -1,4 +1,4 @@
-package com.tuana9a.spring.data.mongodb;
+package com.tuana9a.spring.mongo.qrisolver;
 
 import lombok.Getter;
 import lombok.Setter;
