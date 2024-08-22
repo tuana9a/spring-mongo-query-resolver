@@ -33,51 +33,62 @@ Add dependency into your `pom.xml`
 `pom.xml`
 
 ```xml
-
 <dependencies>
     <dependency>
         <groupId>com.tuana9a</groupId>
         <artifactId>spring-mongo-query-resolver</artifactId>
-        <version>3.0.0</version>
+        <version>3.0.1</version>
     </dependency>
-    <dependencies>
+<dependencies>
 ```
 
-## criteria query
+## resolve criteria query from string
 
 ```java
+// import com.tuana9a.spring.mongo.qrisolver.resolvers.CriteriaResolver;
 
-@Test
-public void testCriteria() throws Error {
-    String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003";
-    Opts opts = new Opts();
-    List<CriteriaPart> parts = new LinkedList<>();
-    for (String x : q.split(",")) {
-        parts.add(ToolBox.buildCriteriaPart(x, opts));
-    }
-    Criteria criteria = ToolBox.buildCriteria(parts, opts);
-    Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8)
-            .and("name").is("tuana9a")
-            .and("graduate").in("prim", "high", "uni")
-            .and("year").gte(1991).lte(2003);
-    Assertions.assertEquals(criteria.getCriteriaObject(), desiredCriteria.getCriteriaObject());
-}
+String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003,deleted==false";
+Criteria criteria = CriteriaResolver.resolve(q);
+Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8)
+        .and("name").is("tuana9a")
+        .and("graduate").in("prim", "high", "uni")
+        .and("year").gte(1991).lte(2003)
+        .and("deleted").is(false);
+Assertions.assertEquals(criteria.getCriteriaObject(), desiredCriteria.getCriteriaObject());
 ```
 
-## sort
+after you get your Criteria you can do what ever with it, like: add more criteria to it then add it to the query
 
 ```java
+criteria = criteria.and("location").near(point).maxDistance(maxDistance);
+mongoTemplate.find(new Query(criteria), ParkingStation.class);
+```
 
-@Test
-public void testSort() throws Error {
-    String s = "age=-1,address=1";
-    Collection<SortPart> parts = new LinkedList<>();
-    for (String x : s.split(",")) {
-        parts.add(ToolBox.buildSortPart(x));
+## resolve sort from string
+
+```java
+// import com.tuana9a.spring.mongo.qrisolver.resolvers.SortResolver;
+
+Sort sort = SortResolver.resolve("age=-1,address=1");
+Sort desiredSort = Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "address"));
+Assertions.assertEquals(sort, desiredSort);
+```
+
+## change global config
+
+```java
+import com.tuana9a.spring.mongo.qrisolver.configs.Config;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.stereotype.Component;
+
+@Slf4j
+@Component
+public class SetQueryResolverConfig implements CommandLineRunner {
+    @Override
+    public void run(String... args) {
+        Config.REGEX_OPTIONS = "i";
     }
-    Sort sort = ToolBox.buildSort(parts);
-    Sort desiredSort = Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Direction.ASC, "address"));
-    Assertions.assertEquals(sort, desiredSort);
 }
 ```
 
