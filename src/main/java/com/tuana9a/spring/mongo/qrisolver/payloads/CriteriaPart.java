@@ -15,4 +15,9 @@ public class CriteriaPart {
         this.operator = operator;
         this.value = value;
     }
+
+    @Override
+    public String toString() {
+        return key + operator + value;
+    }
 }

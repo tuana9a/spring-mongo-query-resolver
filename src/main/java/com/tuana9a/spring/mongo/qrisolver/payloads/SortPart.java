@@ -13,4 +13,9 @@ public class SortPart {
         this.key = key;
         this.order = order;
     }
+
+    @Override
+    public String toString() {
+        return key + "=" + order;
+    }
 }
