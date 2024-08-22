@@ -8,6 +8,13 @@ import org.springframework.data.domain.Sort;
 
 public class SortResolverTests {
     @Test
+    public void testEmptySort() throws Error {
+        Sort sort = SortResolver.resolve("");
+        Sort desiredSort = Sort.unsorted();
+        Assertions.assertEquals(sort, desiredSort);
+    }
+
+    @Test
     public void testBasicUsage() throws Error {
         Sort sort = SortResolver.resolve("age=-1,address=1");
         // this will not work

@@ -13,7 +13,7 @@
 
     <groupId>com.tuana9a</groupId>
     <artifactId>spring-mongo-query-resolver</artifactId>
-    <version>3.0.0</version>
+    <version>3.0.1</version>
     <packaging>jar</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>

@@ -1,6 +1,5 @@
 package com.tuana9a.spring.mongo.qrisolver;
 
-import com.tuana9a.spring.mongo.qrisolver.errors.Error;
 import com.tuana9a.spring.mongo.qrisolver.resolvers.CriteriaResolver;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

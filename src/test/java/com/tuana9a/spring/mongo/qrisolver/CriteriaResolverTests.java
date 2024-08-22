@@ -10,6 +10,14 @@ import org.springframework.data.mongodb.core.query.Criteria;
 
 public class CriteriaResolverTests {
     @Test
+    public void testEmptyQuery() throws Error {
+        String q = "";
+        Criteria criteria = CriteriaResolver.resolve(q);
+        Criteria desiredCriteria = new Criteria();
+        Assertions.assertEquals(criteria.getCriteriaObject(), desiredCriteria.getCriteriaObject());
+    }
+
+    @Test
     public void testBasicUsage() throws Error {
         String q = "age>5,age<10,age!=8,name==tuana9a,graduate@=prim;high;uni,year>=1991,year<=2003,deleted==false";
         Criteria criteria = CriteriaResolver.resolve(q);
