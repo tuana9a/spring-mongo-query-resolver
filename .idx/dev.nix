@@ -22,7 +22,16 @@
     # Search for the extensions you want on https://open-vsx.org/ and use "publisher.id"
     extensions = [
       # "vscodevim.vim"
-      "vscjava.vscode-java-pack"
+      "mhutchie.git-graph"
+      "redhat.vscode-xml"
+      "redhat.vscode-yaml"
+      "ilkka.google-java-format"
+      "redhat.java"
+      "vscjava.vscode-gradle"
+      "vscjava.vscode-java-debug"
+      "vscjava.vscode-java-dependency"
+      "vscjava.vscode-java-test"
+      "vscjava.vscode-maven"
     ];
 
     # Enable previews
