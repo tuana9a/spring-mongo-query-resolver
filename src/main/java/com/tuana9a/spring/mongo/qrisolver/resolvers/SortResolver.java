@@ -10,12 +10,11 @@ import org.springframework.data.domain.Sort;
 import java.util.LinkedList;
 import java.util.List;
 
-import static java.util.Objects.isNull;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasText;
 
 public class SortResolver {
     public static Sort resolve(String input) throws Error {
-        if (isNull(input) || isEmpty(input)) return Sort.unsorted();
+        if (!hasText(input)) return Sort.unsorted();
         List<SortPart> parts = new LinkedList<>();
         for (String x : input.split(Config.DELIMITER)) {
             parts.add(SortPartResolver.resolve(x));

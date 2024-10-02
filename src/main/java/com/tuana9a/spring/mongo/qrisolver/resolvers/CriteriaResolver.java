@@ -9,11 +9,11 @@ import org.springframework.data.mongodb.core.query.Criteria;
 import java.util.*;
 
 import static java.util.Objects.isNull;
-import static org.springframework.util.StringUtils.isEmpty;
+import static org.springframework.util.StringUtils.hasText;;
 
 public class CriteriaResolver {
     public static Criteria resolve(String input) throws Error {
-        if (isNull(input) || isEmpty(input)) return new Criteria();
+        if (!hasText(input)) return new Criteria();
         List<CriteriaPart> parts = new LinkedList<>();
         for (String x : input.split(Config.DELIMITER)) {
             parts.add(CriteriaPartResolver.resolve(x));
