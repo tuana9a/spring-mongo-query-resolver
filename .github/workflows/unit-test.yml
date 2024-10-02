@@ -2,6 +2,9 @@ name: unit test
 
 on:
   pull_request:
+    paths:
+      - src/**
+      - pom.xml
 
 jobs:
   unit-test:
