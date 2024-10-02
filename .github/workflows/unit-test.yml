@@ -18,7 +18,10 @@ jobs:
         with:
           distribution: "corretto"
           java-version: "8"
-          cache: 'maven'
+          cache: "maven"
+
+      - name: dependencies
+        run: mvn dependency:resolve
 
       - name: build
         run: mvn compile
