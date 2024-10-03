@@ -20,6 +20,9 @@ jobs:
           java-version: "8"
           cache: "maven"
 
+      - name: maven version
+        run: mvn --version
+
       - name: dependencies
         run: mvn dependency:resolve
 
