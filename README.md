@@ -1,14 +1,19 @@
 # spring-mongo-query-resolver
 
-This library's formerly name is "merij", "spring-data-mongodb"
+This library's name has changed
 
 - release 1.x merij
 - release 2.x spring-data-mongodb
-- release > 3.x spring-mongo-query-resolver
+- release >= 3.x spring-mongo-query-resolver
 
-# what is this repo
+# Breaking changes
 
-Resolve http query string to mongo criteria query and mongo sort.
+- release `<= 4.x`: java 8
+- release `>= 4.x`: java 17
+
+# What is this repo
+
+Resolve http query string to mongo criteria and mongo sort.
 
 Query operation support
 
@@ -26,7 +31,7 @@ Sort operation support
 - [x] asc
 - [x] desc
 
-# how to use
+# How to use
 
 Add dependency into your `pom.xml`
 
@@ -37,12 +42,12 @@ Add dependency into your `pom.xml`
     <dependency>
         <groupId>com.tuana9a</groupId>
         <artifactId>spring-mongo-query-resolver</artifactId>
-        <version>3.0.1</version>
+        <version>4.0.0</version>
     </dependency>
 <dependencies>
 ```
 
-## resolve criteria query from string
+## Resolve criteria query from string
 
 ```java
 // import com.tuana9a.spring.mongo.qrisolver.resolvers.CriteriaResolver;
@@ -64,7 +69,7 @@ criteria = criteria.and("location").near(point).maxDistance(maxDistance);
 mongoTemplate.find(new Query(criteria), ParkingStation.class);
 ```
 
-## resolve sort from string
+## Resolve sort from string
 
 ```java
 // import com.tuana9a.spring.mongo.qrisolver.resolvers.SortResolver;
@@ -74,7 +79,7 @@ Sort desiredSort = Sort.by(Sort.Direction.DESC, "age").and(Sort.by(Sort.Directio
 Assertions.assertEquals(sort, desiredSort);
 ```
 
-## change global config
+## Global config
 
 ```java
 import com.tuana9a.spring.mongo.qrisolver.configs.Config;
@@ -102,4 +107,4 @@ Create an issue for it.
 
 # Contribution
 
-Any contributions would helps. Just open your PR and I will review it.
+Just open the PR and I will review it.
