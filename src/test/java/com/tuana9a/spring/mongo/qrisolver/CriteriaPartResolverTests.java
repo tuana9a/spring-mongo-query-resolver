@@ -153,11 +153,11 @@ public class CriteriaPartResolverTests {
         CriteriaPart part = CriteriaPartResolver.resolve("id@=1;2;3");
         Assertions.assertEquals(part.getKey(), "id");
         Assertions.assertEquals(part.getOperator(), SupportedOperator.IN);
-        ArrayList<Object> expected = new ArrayList<>();
+        ArrayList<Integer> expected = new ArrayList<>();
         expected.add(1);
         expected.add(2);
         expected.add(3);
-        Assertions.assertArrayEquals(((ArrayList<Object>) part.getValue()).toArray(), expected.toArray());
+        Assertions.assertArrayEquals(((ArrayList<?>) part.getValue()).toArray(), expected.toArray());
     }
 
     @Test
@@ -165,11 +165,11 @@ public class CriteriaPartResolverTests {
         CriteriaPart part = CriteriaPartResolver.resolve("id@=-1;-2;-3");
         Assertions.assertEquals(part.getKey(), "id");
         Assertions.assertEquals(part.getOperator(), SupportedOperator.IN);
-        ArrayList<Object> expected = new ArrayList<>();
+        ArrayList<Integer> expected = new ArrayList<>();
         expected.add(-1);
         expected.add(-2);
         expected.add(-3);
-        Assertions.assertArrayEquals(((ArrayList<Object>) part.getValue()).toArray(), expected.toArray());
+        Assertions.assertArrayEquals(((ArrayList<?>) part.getValue()).toArray(), expected.toArray());
     }
 
     @Test
@@ -181,10 +181,10 @@ public class CriteriaPartResolverTests {
         CriteriaPart part = CriteriaPartResolver.resolve(q);
         Assertions.assertEquals(part.getKey(), "id");
         Assertions.assertEquals(part.getOperator(), SupportedOperator.IN);
-        ArrayList<Object> expected = new ArrayList<>();
+        ArrayList<Long> expected = new ArrayList<>();
         expected.add(num1);
         expected.add(num2);
         expected.add(num3);
-        Assertions.assertArrayEquals(((ArrayList<Object>) part.getValue()).toArray(), expected.toArray());
+        Assertions.assertArrayEquals(((ArrayList<?>) part.getValue()).toArray(), expected.toArray());
     }
 }

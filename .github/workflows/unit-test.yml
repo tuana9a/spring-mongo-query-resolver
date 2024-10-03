@@ -14,11 +14,17 @@ jobs:
         uses: actions/checkout@v4
 
       - name: set up JDK
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: "corretto"
-          java-version: "8"
-          cache: 'maven'
+          java-version: "17"
+          cache: "maven"
+
+      - name: maven version
+        run: mvn --version
+
+      - name: dependencies
+        run: mvn dependency:resolve
 
       - name: build
         run: mvn compile
