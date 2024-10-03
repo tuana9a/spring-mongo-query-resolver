@@ -62,7 +62,7 @@ Criteria desiredCriteria = Criteria.where("age").gt(5).lt(10).ne(8)
 Assertions.assertEquals(criteria.getCriteriaObject(), desiredCriteria.getCriteriaObject());
 ```
 
-after you get your Criteria you can do what ever with it, like: add more criteria to it then add it to the query
+After you get your Criteria you can add it to the query and start querying data with it
 
 ```java
 criteria = criteria.and("location").near(point).maxDistance(maxDistance);
@@ -83,11 +83,9 @@ Assertions.assertEquals(sort, desiredSort);
 
 ```java
 import com.tuana9a.spring.mongo.qrisolver.configs.Config;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-@Slf4j
 @Component
 public class SetQueryResolverConfig implements CommandLineRunner {
     @Override
